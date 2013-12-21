@@ -46,6 +46,8 @@ module.exports = (grunt) ->
 
 		jade:
 			build:
+				options:
+					pretty: true
 				files: [
 					expand: true
 					cwd: '<%= project.app %>'
@@ -60,7 +62,7 @@ module.exports = (grunt) ->
 					expand: true
 					cwd: '<%= project.app %>'
 					src: ['**/*.coffee']
-					dest: '<%= project.dist %>'
+					dest: '<%= project.tmp %>'
 					ext: '.js'
 				]
 
@@ -70,7 +72,7 @@ module.exports = (grunt) ->
 					expand: true
 					cwd: '<%= project.app %>'
 					src: ['**/*.styl']
-					dest: '<%= project.dist %>'
+					dest: '<%= project.tmp %>'
 					ext: '.css'
 				]
 
@@ -80,9 +82,9 @@ module.exports = (grunt) ->
 			build:
 				files: [
 					expand: true
-					cwd: '<%= project.dist %>'
+					cwd: '<%= project.tmp %>'
 					src: '**/*.css'
-					dest: '<%= project.dist %>'
+					dest: '<%= project.tmp %>'
 				]
 
 		'bower-install':
@@ -90,18 +92,42 @@ module.exports = (grunt) ->
 				html: '<%= project.dist %>/index.html',
 				ignorePath: '<%= project.app %>/'
 
+		rev:
+			dist:
+				src: '<%= project.dist %>/{scripts,styles}/**/*'
+
+		useminPrepare:
+			options:
+				dest: '<%= project.dest %>'
+				root: '<%= project.tmp %>'
+			html: '<%= project.dist %>/index.html'
+
+		usemin:
+			options:
+				assetsDirs: ['<%= project.dist %>']
+			html: '<%= project.dist %>/**/*.html'
+
+
 		clean:
 			dist: ['<%= project.dist %>']
+			tmp: ['<%= project.tmp %>']
+
 
 	grunt.registerTask 'build', [
 		'clean'
 		'jade:build'
+		'bower-install'
+		'useminPrepare'
 		'coffee:build'
 		'stylus:build'
 		'autoprefixer'
-		'bower-install'
-		'copy:bower'
+		'concat'
+		'cssmin'
+		'uglify'
+		'rev'
+		'usemin'
 	]
+
 
 	grunt.registerTask 'serve', ['build', 'connect:livereload', 'watch']
 
