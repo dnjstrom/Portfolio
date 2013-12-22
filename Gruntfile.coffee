@@ -25,7 +25,7 @@ module.exports = (grunt) ->
 				tasks: ['stylus:build']
 			html:
 				files: ['**/*.jade']
-				tasks: ['jade:build']
+				tasks: ['jade:build', 'bower-install']
 			livereload:
 				options:
 					livereload: '<%= connect.options.livereload %>'
@@ -107,13 +107,46 @@ module.exports = (grunt) ->
 				assetsDirs: ['<%= project.dist %>']
 			html: '<%= project.dist %>/**/*.html'
 
+		htmlmin:
+			dist:
+				options:
+					collapseBooleanAttributes: true
+					collapseWhitespace: true
+					removeAttributeQuotes: true
+					removeCommentsFromCDATA: true
+					removeEmptyAttributes: true
+					removeOptionalTags: true
+					removeRedundantAttributes: true
+					useShortDoctype: true
+				files: [
+					expand: true
+					cwd: '<%= project.dist %>'
+					src: '**/*.html'
+					dest: '<%= project.dist %>'
+				]
+
+		copy:
+			tmp:
+				files: [
+					expand: true
+					cwd: '<%= project.tmp %>'
+					src: '**/*'
+					dest: '<%= project.dist %>/'
+				]
+			bower_components:
+				files: [
+					expand: true
+					cwd: '<%= project.app %>/bower_components'
+					src: '**/*'
+					dest: '<%= project.dist %>/bower_components'
+				]
 
 		clean:
 			dist: ['<%= project.dist %>']
 			tmp: ['<%= project.tmp %>']
 
 
-	grunt.registerTask 'build', [
+	grunt.registerTask 'dist', [
 		'clean'
 		'jade:build'
 		'bower-install'
@@ -126,13 +159,17 @@ module.exports = (grunt) ->
 		'uglify'
 		'rev'
 		'usemin'
+		'htmlmin'
 	]
 
-	grunt.registerTask 'b', [
+	grunt.registerTask 'build', [
 		'clean'
 		'jade:build'
 		'bower-install'
-		'useminPrepare'
+		'coffee:build'
+		'stylus:build'
+		'autoprefixer'
+		'copy'
 	]
 
 	grunt.registerTask 'serve', ['build', 'connect:livereload', 'watch']
