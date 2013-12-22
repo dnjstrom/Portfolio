@@ -128,6 +128,12 @@ module.exports = (grunt) ->
 		'usemin'
 	]
 
+	grunt.registerTask 'b', [
+		'clean'
+		'jade:build'
+		'bower-install'
+		'useminPrepare'
+	]
 
 	grunt.registerTask 'serve', ['build', 'connect:livereload', 'watch']
 

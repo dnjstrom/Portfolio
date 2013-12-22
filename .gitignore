@@ -3,3 +3,5 @@ dist
 app/bower_components
 .fuse_hidden*
 .tmp
+*.sublime-project
+*.sublime-workspace
