@@ -62,12 +62,28 @@ module.exports = (grunt) ->
 					expand: true
 					cwd: '<%= project.app %>'
 					src: ['**/*.coffee']
+					dest: '<%= project.dist %>'
+					ext: '.js'
+				]
+			dist:
+				files: [
+					expand: true
+					cwd: '<%= project.app %>'
+					src: ['**/*.coffee']
 					dest: '<%= project.tmp %>'
 					ext: '.js'
 				]
 
 		stylus:
 			build:
+				files: [
+					expand: true
+					cwd: '<%= project.app %>'
+					src: ['**/*.styl']
+					dest: '<%= project.dist %>'
+					ext: '.css'
+				]
+			dist:
 				files: [
 					expand: true
 					cwd: '<%= project.app %>'
@@ -80,6 +96,13 @@ module.exports = (grunt) ->
 			options:
 				browsers: ['last 1 version']
 			build:
+				files: [
+					expand: true
+					cwd: '<%= project.dist %>'
+					src: '**/*.css'
+					dest: '<%= project.dist %>'
+				]
+			dist:
 				files: [
 					expand: true
 					cwd: '<%= project.tmp %>'
@@ -151,8 +174,8 @@ module.exports = (grunt) ->
 		'jade:build'
 		'bower-install'
 		'useminPrepare'
-		'coffee:build'
-		'stylus:build'
+		'coffee:dist'
+		'stylus:dist'
 		'autoprefixer'
 		'concat'
 		'cssmin'
