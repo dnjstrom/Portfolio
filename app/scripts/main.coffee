@@ -1,2 +1,3 @@
 # Make type responsive
-$('body').flowtype({minFont: 16})
+$('#title').fitText(0.6)
+$('#pages').flowtype({minFont: 16})
